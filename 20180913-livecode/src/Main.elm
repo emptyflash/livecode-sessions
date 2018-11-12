@@ -70,7 +70,7 @@ func : Float -> Vec2
 func t =
     let
         a =
-            3.0
+            2.0
 
         b =
             2.2
@@ -82,7 +82,7 @@ func t =
             2 * 3.14 * f
 
         h =
-            2.0
+            1.0 + sin (t / 5000)
 
         x =
             (a + b) * cos (w * t) - h * cos ((a - b) / b * w * t)
@@ -168,7 +168,7 @@ fragmentShader =
         void main() {
             vec2 st = gl_FragCoord.xy;
             float alpha = 1.0;//int(floor(sin(time) + 0.5)) == 1 ? 0.0 : 1.0;
-            vec3 color = hsb2rgb(vec3(sin(time / 1000.0), 1.0, 1.0));
+            vec3 color = hsb2rgb(vec3(sin(time / 5000.0), 1.0, 1.0));
             gl_FragColor = vec4(color, alpha);
         }
     |]
