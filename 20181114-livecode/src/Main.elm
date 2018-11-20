@@ -166,7 +166,7 @@ fragmentShader =
         void main() {
             vec2 st = gl_FragCoord.xy / size;
             st /= sin(time);
-            //gl_FragColor = vec4(st.x, st.y * abs(cos(time)), abs(sin(time)), 1.0);
+            gl_FragColor = vec4(st.x, st.y * abs(cos(time)), abs(sin(time)), 1.0);
         }
     |]
 
