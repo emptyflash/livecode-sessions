@@ -59,9 +59,9 @@ type alias Attributes =
 
 
 meshes model =
-    List.range 0 50
+    List.range 0 150
         |> List.map toFloat
-        |> List.map (\n -> listPoints { model | time = model.time - (n * 10) } n)
+        |> List.map (\n -> listPoints { model | time = model.time - (n * 5) } n)
         |> List.concat
         |> WebGL.lineStrip
 
@@ -76,10 +76,10 @@ listPoints model n =
 func model n =
     let
         k =
-            3 * abs (cos (model.time / 1000)) * sin (3 * model.time / 1000)
+            abs (cos (model.time / 1000)) * sin (3 * model.time / 1000)
 
         b =
-            2 * cos (3 * model.time / 1000)
+            cos (3 * model.time / 1000)
 
         x =
             n + (k * n) / sqrt (b ^ 2 + n ^ 2)
@@ -165,8 +165,8 @@ fragmentShader =
 
         void main() {
             vec2 st = gl_FragCoord.xy / size;
-            st /= sin(time);
-            gl_FragColor = vec4(st.x, st.y * abs(cos(time)), abs(sin(time)), 1.0);
+            //st /= sin(time);
+            gl_FragColor = vec4(st.x * abs(cos(time)), st.y * abs(sin(time)), st.y, 1.0);
         }
     |]
 
