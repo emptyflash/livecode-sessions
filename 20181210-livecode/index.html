@@ -110,7 +110,7 @@
             return uv * 0.5 * w;
         }
         `;
-        fetch('shader.frag').then(r => r.text()).then(s => sandbox.load(prelude + s))
+        fetch('/shader.frag').then(r => r.text()).then(s => sandbox.load(prelude + s))
 
         var ws = new ReconnectingWebSocket('ws://emptyflash.ngrok.io/');
         ws.onopen = function() {
