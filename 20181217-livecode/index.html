@@ -1,0 +1,142 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/emptyflash/GlslCanvas@master/dist/GlslCanvas.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/joewalnes/reconnecting-websocket@master/reconnecting-websocket.min.js"></script>
+    </head>
+
+    <style>
+            body {
+                background: #101515;
+                overflow-y: hidden;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            #canvas {
+                width: 100%;
+                height: 99%;
+            }
+    </style>
+
+    <body>
+        <canvas id="canvas"/>
+    </body>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("canvas");
+        var sandbox = new GlslCanvas(canvas);
+        let prelude = `
+        precision mediump float;
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        float random (in vec2 st) {
+            return fract(sin(dot(st.xy,
+                                 vec2(12.9898,78.233)))*
+                43758.5453123);
+        }
+
+        // Based on Morgan McGuire @morgan3d
+        // https://www.shadertoy.com/view/4dS3Wd
+        float noise (in vec2 st) {
+            vec2 i = floor(st);
+            vec2 f = fract(st);
+
+            // Four corners in 2D of a tile
+            float a = random(i);
+            float b = random(i + vec2(1.0, 0.0));
+            float c = random(i + vec2(0.0, 1.0));
+            float d = random(i + vec2(1.0, 1.0));
+
+            vec2 u = f * f * (3.0 - 2.0 * f);
+
+            return mix(a, b, u.x) +
+                    (c - a)* u.y * (1.0 - u.x) +
+                    (d - b) * u.x * u.y;
+        }
+
+        #define OCTAVES 6
+        float fbm (in vec2 st) {
+            // Initial values
+            float value = 0.0;
+            float amplitude = .5;
+            float frequency = 0.;
+            //
+            // Loop of octaves
+            for (int i = 0; i < OCTAVES; i++) {
+                value += amplitude * noise(st);
+                st *= 2.;
+                amplitude *= .5;
+            }
+            return value;
+        }
+
+        float box(in vec2 _st, in vec2 _size){
+            _size = vec2(0.5) - _size*0.5;
+            vec2 uv = smoothstep(_size,
+                                _size+vec2(0.001),
+                                _st);
+            uv *= smoothstep(_size,
+                            _size+vec2(0.001),
+                            vec2(1.0)-_st);
+            return uv.x*uv.y;
+        }
+
+        float circle(in vec2 _st, in float _radius){
+            vec2 dist = _st-vec2(0.5);
+            return 1.-smoothstep(_radius-(_radius*0.01),
+                                 _radius+(_radius*0.01),
+                                 dot(dist,dist)*4.0);
+        }
+
+        mat2 rotate2d(float _angle){
+            return mat2(cos(_angle),-sin(_angle),
+                        sin(_angle),cos(_angle));
+        }
+
+        vec3 hsb2rgb( in vec3 c ){
+            vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),
+                                     6.0)-3.0)-1.0,
+                             0.0,
+                             1.0 );
+            rgb = rgb*rgb*(3.0-2.0*rgb);
+            return c.z * mix(vec3(1.0), rgb, c.y);
+        }
+
+        vec2 kaleidoscope(vec2 st) {
+            vec2 p = -1.0 + 2.0 * st;
+            vec2 uv;
+           
+            float a = atan(p.y,p.x);
+            float r = sqrt(dot(p,p));
+
+            uv.x = 7.0*a/3.1416;
+            uv.y = -u_time+ sin(7.0*r+u_time) + .7*cos(u_time+7.0*a);
+
+            float w = .5+.5*(sin(u_time+7.0*r)+ .7*cos(u_time+7.0*a));
+
+            return uv * 0.5 * w;
+        }
+        `;
+        fetch('shader.frag').then(r => r.text()).then(s => sandbox.load(prelude + s))
+
+        var ws = new ReconnectingWebSocket('ws://localhost:9000/');
+        ws.onopen = function() {
+            console.log('CONNECT');
+        };
+        ws.onclose = function() {
+            console.log('DISCONNECT');
+        };
+
+        let currentShader = "";
+        ws.onmessage = function(event) {
+            if (event.data === '---') {
+                console.log(currentShader);
+                sandbox.load(prelude + currentShader);
+                currentShader = "";
+            } else {
+                currentShader += event.data + '\n';
+            }
+        };
+    </script>
+</html>
+
