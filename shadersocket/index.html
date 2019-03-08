@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/emptyflash/GlslCanvas@master/dist/GlslCanvas.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/joewalnes/reconnecting-websocket@master/reconnecting-websocket.min.js"></script>
+    </head>
+
+    <style>
+            body {
+                background: #101515;
+                overflow-y: hidden;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            #canvas {
+                width: 100%;
+                height: 99%;
+            }
+    </style>
+
+    <body>
+        <canvas id="canvas"/>
+    </body>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("canvas");
+        var sandbox = new GlslCanvas(canvas);
+        let prelude = '';
+        fetch('std.frag')
+            .then(r => r.text())
+            .then(p => {
+                prelude = p;
+                return fetch('shader.frag')
+                    .then(r => r.text())
+                    .then(s => sandbox.load(prelude + s))
+            });
+
+        var ws = new ReconnectingWebSocket('ws://localhost:9000/');
+        ws.onopen = function() {
+            console.log('CONNECT');
+        };
+        ws.onclose = function() {
+            console.log('DISCONNECT');
+        };
+
+        let currentShader = "";
+        ws.onmessage = function(event) {
+            if (event.data === '---') {
+                console.log(currentShader);
+                sandbox.load(prelude + currentShader);
+                currentShader = "";
+            } else {
+                currentShader += event.data + '\n';
+            }
+        };
+    </script>
+</html>
+
