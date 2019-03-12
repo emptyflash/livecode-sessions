@@ -23,36 +23,55 @@
     </body>
 
     <script type="text/javascript">
-        var canvas = document.getElementById("canvas");
-        var sandbox = new GlslCanvas(canvas);
-        let prelude = '';
+        const canvas = document.getElementById("canvas");
+        const sandbox = new GlslCanvas(canvas);
         fetch('std.frag')
             .then(r => r.text())
             .then(p => {
                 prelude = p;
                 return fetch('shader.frag')
                     .then(r => r.text())
-                    .then(s => sandbox.load(prelude + s))
+                    .then(s => {
+                        sandbox.load(prelude + s)
+                        var ws = new ReconnectingWebSocket('ws://localhost:9000/');
+                        ws.onopen = function() {
+                            console.log('CONNECT');
+                        };
+                        ws.onclose = function() {
+                            console.log('DISCONNECT');
+                        };
+                        let currentShader = "";
+                        ws.onmessage = function(event) {
+                            if (event.data === '---') {
+                                console.log(currentShader);
+                                sandbox.load(prelude + currentShader);
+                                currentShader = "";
+                            } else {
+                                currentShader += event.data + '\n';
+                            }
+                        };
+                    })
             });
 
-        var ws = new ReconnectingWebSocket('ws://localhost:9000/');
-        ws.onopen = function() {
-            console.log('CONNECT');
-        };
-        ws.onclose = function() {
-            console.log('DISCONNECT');
-        };
+        const audioCtx = new AudioContext();
+        const analyser = audioCtx.createAnalyser();
+        analyser.minDecibels = -90;
+        analyser.maxDecibels = -10;
+        analyser.fftSize = 32;
+        analyser.smoothingTimeConstant = 0.85;
 
-        let currentShader = "";
-        ws.onmessage = function(event) {
-            if (event.data === '---') {
-                console.log(currentShader);
-                sandbox.load(prelude + currentShader);
-                currentShader = "";
-            } else {
-                currentShader += event.data + '\n';
-            }
-        };
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            const source = audioCtx.createMediaStreamSource(stream);
+            source.connect(analyser);
+        });
+
+        const samples = analyser.frequencyBinCount;
+        const spectrumBuffer = new Uint8Array(samples);
+        sandbox.on('render', () => {
+            //analyser.getByteFrequencyData(spectrumBuffer);
+            spectrumBuffer.set([10, 900,100,100,100,100,100,100,100,100,100,100,100,100,100,100,]); 
+            sandbox.setUniform('u_audio', spectrumBuffer);
+        });
     </script>
 </html>
 
