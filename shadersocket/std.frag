@@ -1,7 +1,7 @@
 precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
-uniform int u_audio[16];
+uniform vec4 u_audio;
 float random (in vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))*

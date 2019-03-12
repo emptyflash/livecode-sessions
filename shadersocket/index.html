@@ -27,38 +27,46 @@
         const sandbox = new GlslCanvas(canvas);
         fetch('std.frag')
             .then(r => r.text())
-            .then(p => {
-                prelude = p;
-                return fetch('shader.frag')
-                    .then(r => r.text())
-                    .then(s => {
-                        sandbox.load(prelude + s)
-                        var ws = new ReconnectingWebSocket('ws://localhost:9000/');
-                        ws.onopen = function() {
-                            console.log('CONNECT');
-                        };
-                        ws.onclose = function() {
-                            console.log('DISCONNECT');
-                        };
-                        let currentShader = "";
-                        ws.onmessage = function(event) {
-                            if (event.data === '---') {
-                                console.log(currentShader);
-                                sandbox.load(prelude + currentShader);
-                                currentShader = "";
-                            } else {
-                                currentShader += event.data + '\n';
-                            }
-                        };
-                    })
+            .then(std => {
+                var ws = new ReconnectingWebSocket('ws://localhost:9000/');
+                ws.onopen = function() {
+                    console.log('CONNECT');
+                };
+                ws.onclose = function() {
+                    console.log('DISCONNECT');
+                };
+                let currentShader = "";
+                ws.onmessage = function(event) {
+                    if (event.data === '---') {
+                        console.log(currentShader);
+                        sandbox.load(std + currentShader);
+                        currentShader = "";
+                    } else {
+                        currentShader += event.data + '\n';
+                    }
+                };
             });
 
         const audioCtx = new AudioContext();
+
+        if (audioCtx.state === 'suspended') {
+            const unlock = () => {
+                audioCtx.resume().then(() => {
+                        document.body.removeEventListener('touchstart', unlock);
+                        document.body.removeEventListener('touchend', unlock);
+                        document.body.removeEventListener('click', unlock);
+                    });
+            };
+
+            document.body.addEventListener('touchstart', unlock, false);
+            document.body.addEventListener('touchend', unlock, false);
+            document.body.addEventListener('click', unlock, false);
+        }
         const analyser = audioCtx.createAnalyser();
-        analyser.minDecibels = -90;
-        analyser.maxDecibels = -10;
+        //analyser.minDecibels = -90;
+        //analyser.maxDecibels = -10;
         analyser.fftSize = 32;
-        analyser.smoothingTimeConstant = 0.85;
+        //analyser.smoothingTimeConstant = 0.85;
 
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
             const source = audioCtx.createMediaStreamSource(stream);
@@ -68,9 +76,9 @@
         const samples = analyser.frequencyBinCount;
         const spectrumBuffer = new Uint8Array(samples);
         sandbox.on('render', () => {
-            //analyser.getByteFrequencyData(spectrumBuffer);
-            spectrumBuffer.set([10, 900,100,100,100,100,100,100,100,100,100,100,100,100,100,100,]); 
-            sandbox.setUniform('u_audio', spectrumBuffer);
+            analyser.getByteFrequencyData(spectrumBuffer);
+            const audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
+            sandbox.setUniforms({'u_audio': audio});
         });
     </script>
 </html>
