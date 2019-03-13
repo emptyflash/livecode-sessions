@@ -1,0 +1,21 @@
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec4 u_audio;
+float random (in vec2 st)
+float noise (in vec2 st)
+float fbm (in vec2 st)
+float box(in vec2 _st, in vec2 _size)
+float circle(in vec2 _st, in float _radius)
+mat2 rotate2d(float _angle)
+vec3 hsb2rgb( in vec3 c )
+vec2 kaleid(vec2 st, float nSides) 
+vec2 modulateKaleid(vec2 st, vec4 c1, float nSides)
+vec2 modulate(vec2 st, vec4 c1, float amount)
+vec2 modulateRotate(vec2 st, vec4 c1, float multiple, float offset)
+vec4 blend(vec4 c0, vec4 c1, float amount)
+vec4 layer(vec4 c0, vec4 c1)
+vec4 mult(vec4 c0, vec4 c1, float amount)
+vec4 diff(vec4 c0, vec4 c1)
+vec2 scale(vec2 st, float amount, float xMult, float yMult)
+vec4 osc(vec2 _st, float freq, float sync, float offset)
+vec4 simplexNoise(vec2 st, float scale, float offset) 
