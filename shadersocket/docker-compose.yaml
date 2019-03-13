@@ -4,6 +4,7 @@ services:
         build: .
         volumes:
             - ${SHADER_FOLDER}:/home/app/shader
+
     nginx:
         image: nginx
         ports:
@@ -11,15 +12,29 @@ services:
         volumes:
             - .:/usr/share/nginx/html
             - ./nginx.conf:/etc/nginx/nginx.conf
-        depends_on:
-            - watchcat
+
+    caddy:
+        image: emptyflash/caddy
+        environment:
+            - ACME_AGREE=true
+            - NAMECOM_USERNAME=emptyflash
+            - NAMECOM_API_TOKEN=31fa8e436e69ce21ff034d5b79ec004bb8068bfc
+        volumes:
+            - ./Caddyfile:/etc/Caddyfile
+            - ${HOME}/.caddy:/root/.caddy
+            - ./index.html:/srv/index.html
+            - ./std.frag:/srv/std.frag
+        ports:
+            - "2015:2015"
+            - "4443:443"
+
     ngrok:
         image: wernight/ngrok
         command: ["ngrok", "http", 
             "-hostname", "local.cameron.pizza",
             "--log", "stdout",
             "--authtoken", "${NGROK_AUTHTOKEN}",
-            "nginx:80"
+            "caddy:443"
         ]
-        depends_on:
-            - nginx
+        ports:
+            - "4040:4040"

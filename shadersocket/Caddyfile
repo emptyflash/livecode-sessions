@@ -1,0 +1,10 @@
+https://local.cameron.pizza http://local.cameron.pizza {
+    browse
+    tls emptyflash@gmail.com {
+        dns namedotcom
+    }
+
+    proxy /websocket watchcat:9000 {
+        websocket
+    }
+}
