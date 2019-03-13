@@ -28,7 +28,7 @@
         fetch('std.frag')
             .then(r => r.text())
             .then(std => {
-                var ws = new ReconnectingWebSocket('ws://localhost:9000/');
+                var ws = new ReconnectingWebSocket(`ws://${window.location.host}/websocket`);
                 ws.onopen = function() {
                     console.log('CONNECT');
                 };

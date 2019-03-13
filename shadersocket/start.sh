@@ -1,9 +1,10 @@
 #!/bin/bash
 
-trap 'kill $(jobs -p)' EXIT
-script_dir=$(dirname "${BASH_SOURCE[0]}")
-shader_dir=$(pwd)
-cd $script_dir
-docker run --name shadersocket-nginx --rm -v $(pwd):/usr/share/nginx/html:ro -p 8080:80 -i nginx &
-cd $shader_dir
-websocketd --port 9000 $script_dir/watchcat.sh
+export SHADER_FOLDER=$(pwd)
+cd $(dirname "${BASH_SOURCE[0]}")
+services="nginx watchcat"
+if [ -f ~/.ngrok2/ngrok.yml ]; then
+    export NGROK_AUTHTOKEN=$(docker run -v ~/.ngrok2:/workdir mikefarah/yq yq read ngrok.yml authtoken)
+    services="$services ngrok"
+fi
+docker-compose up --build $services

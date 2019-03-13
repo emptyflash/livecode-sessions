@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd shader
 cat shader.frag
 echo "---"
 while ! $(inotifywait -eMODIFY shader.frag 2>/dev/null); do
