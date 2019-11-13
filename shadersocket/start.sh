@@ -9,4 +9,8 @@ if [ -f ~/.ngrok2/ngrok.yml ]; then
 else
     services="$services nginx"
 fi
+if [ -f ~/.namedotcom/creds.yml ]; then
+    export NAMECOM_API_TOKEN=$(docker run -v ~/.namedotcom:/workdir mikefarah/yq yq read creds.yml api_token)
+    export NAMECOM_USERNAME=$(docker run -v ~/.namedotcom:/workdir mikefarah/yq yq read creds.yml username)
+fi
 docker-compose up --build $services

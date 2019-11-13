@@ -17,8 +17,8 @@ services:
         image: emptyflash/caddy
         environment:
             - ACME_AGREE=true
-            - NAMECOM_USERNAME=emptyflash
-            - NAMECOM_API_TOKEN=31fa8e436e69ce21ff034d5b79ec004bb8068bfc
+            - NAMECOM_USERNAME=${NAMECOM_USERNAME}
+            - NAMECOM_API_TOKEN=${NAMECOM_API_TOKEN}
         volumes:
             - ./Caddyfile:/etc/Caddyfile
             - ${HOME}/.caddy:/root/.caddy
@@ -34,7 +34,7 @@ services:
             "-hostname", "local.cameron.pizza",
             "--log", "stdout",
             "--authtoken", "${NGROK_AUTHTOKEN}",
-            "caddy:443"
+            "caddy:80"
         ]
         ports:
             - "4040:4040"
