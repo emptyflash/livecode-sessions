@@ -1,4 +1,4 @@
-FROM debian
+FROM haskell:8.4.4
 
 WORKDIR /home/app
 
@@ -10,6 +10,10 @@ RUN apt-get update \
     && mv /tmp/websocketd/websocketd /usr/bin \
     && chmod +x /usr/bin/websocketd \
     && rm /tmp/websocketd.zip
+
+COPY ./yinlang/ yinlang/
+
+RUN cd yinlang && stack install
 
 COPY watchcat.sh .
 

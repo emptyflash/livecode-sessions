@@ -1,0 +1,11 @@
+uniform u_time float
+uniform u_resolution vec2
+uniform u_audio vec4
+
+main coord = let
+  st = coord / u_resolution.xy
+  f = fbm (st * vec2 1.0 3.0 * vec2 u_time u_time) + (u_audio.y * 0.001)
+  g = fbm (st * vec2 2.0 2.0 * vec2 u_time u_time) + (u_audio.z * 0.001)
+  h = fbm (st * vec2 3.0 2.0 + vec2 u_time u_time) + (u_audio.x * 0.001)
+  v = vec4 f g h 1.0
+  in v
