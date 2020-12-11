@@ -3,7 +3,8 @@ services:
     watchcat:
         build: .
         volumes:
-            - ${SHADER_FOLDER}:/home/app/shader
+            - ${SHADER_FOLDER}:/shader
+            - "~/Projects/yinlang/std.yin:/std.yin"
     nginx:
         image: nginx
         ports:

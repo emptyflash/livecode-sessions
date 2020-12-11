@@ -1,18 +1,16 @@
 #!/bin/bash
 
 cat_yin() {
-    cat shader.yin | yin
+    cat shader/shader.yin | yin
 }
 
 if [ -f shader/shader.yin ]; then
-    cp yinlang/std.yin .
-    FILE="shader.yin"
+    FILE="shader/shader.yin"
     COMMAND=cat_yin
 else
-    FILE="shader.frag"
-    COMMAND="cat shader.frag"
+    FILE="shader/shader.frag"
+    COMMAND="cat shader/shader.frag"
 fi
-cd shader
 $COMMAND
 echo "---"
 while ! $(inotifywait -eMODIFY $FILE 2>/dev/null); do
