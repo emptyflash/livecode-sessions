@@ -9,5 +9,5 @@ while [[ -e $dir ]]; do
 done
 
 mkdir $dir
-touch $dir/shader.frag
+touch $dir/shader.yin
 echo $dir

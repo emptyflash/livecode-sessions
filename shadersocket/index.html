@@ -37,6 +37,9 @@
                 };
                 let currentShader = "";
                 ws.onmessage = function(event) {
+                    if (event.data.trim() === "") {
+                        return
+                    }
                     if (event.data === '---') {
                         console.log(currentShader);
                         sandbox.load(std + currentShader);
