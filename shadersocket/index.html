@@ -14,12 +14,12 @@
 
             #canvas {
                 width: 100%;
-                height: 99%;
+                height: 100%;
             }
     </style>
 
     <body>
-        <canvas id="canvas"/>
+        <canvas data-textures="puppy.jpg" id="canvas"/>
     </body>
 
     <script type="text/javascript">
@@ -37,11 +37,11 @@
                 };
                 let currentShader = "";
                 ws.onmessage = function(event) {
-                    if (event.data.trim() === "") {
-                        return
-                    }
                     if (event.data === '---') {
                         console.log(currentShader);
+                        if (currentShader.trim() === "") {
+                            return;
+                        }
                         sandbox.load(std + currentShader);
                         currentShader = "";
                     } else {
@@ -82,6 +82,9 @@
             analyser.getByteFrequencyData(spectrumBuffer);
             const audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
             sandbox.setUniforms({'u_audio': audio});
+
+            const gl = sandbox.gl;
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gl.canvas);
         });
     </script>
 </html>
