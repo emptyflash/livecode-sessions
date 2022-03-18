@@ -32,8 +32,8 @@
                 ws.onopen = function() {
                     console.log('CONNECT');
                 };
-                ws.onclose = function() {
-                    console.log('DISCONNECT');
+                ws.onclose = function(data) {
+                    console.log('DISCONNECT', data);
                 };
                 let currentShader = "";
                 ws.onmessage = function(event) {
@@ -71,16 +71,23 @@
         analyser.fftSize = 32;
         //analyser.smoothingTimeConstant = 0.85;
 
+        let success = true;
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
             const source = audioCtx.createMediaStreamSource(stream);
             source.connect(analyser);
-        });
+        }).catch(() => { success = false; });
 
         const samples = analyser.frequencyBinCount;
         const spectrumBuffer = new Uint8Array(samples);
         sandbox.on('render', () => {
             analyser.getByteFrequencyData(spectrumBuffer);
-            const audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
+            let audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
+            if (!success) {
+                const time = new Date();
+                audio = [Math.sin(time), Math.sin(+time + 1), Math.sin(+time + 2), Math.sin(+time + 3)].map(a => a * 255);
+
+                console.log(audio)
+            }
             sandbox.setUniforms({'u_audio': audio});
 
             const gl = sandbox.gl;

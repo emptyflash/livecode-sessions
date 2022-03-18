@@ -23,5 +23,7 @@ services:
             "--authtoken", "${NGROK_AUTHTOKEN}",
             "nginx:80"
         ]
+        ports:
+            - "4040:4040"
         depends_on:
             - nginx
