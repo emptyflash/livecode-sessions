@@ -28,7 +28,8 @@
         fetch('std.frag')
             .then(r => r.text())
             .then(std => {
-                var ws = new ReconnectingWebSocket(`ws://${window.location.host}/websocket`);
+                const scheme = window.location.protocol.includes("s") ? "wss" : "ws";
+                var ws = new ReconnectingWebSocket(`${scheme}://${window.location.host}/websocket`);
                 ws.onopen = function() {
                     console.log('CONNECT');
                 };
@@ -79,7 +80,12 @@
 
         const samples = analyser.frequencyBinCount;
         const spectrumBuffer = new Uint8Array(samples);
+        let firstRender = true;
         sandbox.on('render', () => {
+            if (firstRender) {
+                sandbox.width = sandbox.width - 1;
+                firstRender = false;
+            }
             analyser.getByteFrequencyData(spectrumBuffer);
             let audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
             if (!success) {

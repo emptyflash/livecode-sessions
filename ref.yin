@@ -1,0 +1,44 @@
+cast2 v = vec2 v v
+cast3 v = vec3 v v v
+cast4 v = vec4 v v v v
+
+
+shape : Vec2 -> Float -> Float -> Float -> Vec4
+shape st_ sides radius smoothing = let
+
+noise : Vec2 -> Float -> Float -> Float -> Vec4
+noise st time scale offset = let
+
+simplex_noise : Vec2 -> Float -> Float -> Float -> Vec4
+simplex_noise st time scale offset = let
+
+fbm : Vec2 -> Float -> Float -> Float -> Vec4
+fbm st time scale offset = let
+
+dw : Vec2 -> Float -> Float -> Float -> Vec4
+dw st time scale offset = let
+
+kaleid st nSides = let
+
+luminance rgb = let
+
+mask : Vec4 -> Vec4 -> Vec4
+
+diff : Vec4 -> Vec4 -> Vec4
+
+layer : Vec4 -> Vec4 -> Vec4
+
+scale_coords st_ amount x y = let
+
+osc : Vec2 -> Float -> Float -> Float -> Float -> Vec4
+osc st time freq sync offset = let
+
+modulate : Vec2 -> Vec4 -> Float -> Vec2
+modulate st color amount = let
+
+modulate_hue : Vec2 -> Vec2 -> Vec4 -> Float -> Vec2
+modulate_hue st resolution c1 amount = let
+
+src st_ tex = texture2D tex (fract st_)
+
+rotate st time angle speed = let
