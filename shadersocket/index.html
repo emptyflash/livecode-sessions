@@ -28,6 +28,9 @@
         fetch('std.frag')
             .then(r => r.text())
             .then(std => {
+                fetch("shader.frag").then(r => r.text()).then(shader => {
+                    sandbox.load(std + shader);
+                });
                 const scheme = window.location.protocol.includes("s") ? "wss" : "ws";
                 var ws = new ReconnectingWebSocket(`${scheme}://${window.location.host}/websocket`);
                 ws.onopen = function() {

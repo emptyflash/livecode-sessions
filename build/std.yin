@@ -210,18 +210,6 @@ layer c0 c1 = let
     rgb = mix c0.rgb c1.rgb c1.a
     in vec4 rgb.r rgb.g rgb.b (c0.a+c1.a)
 
-add : Vec4 -> Vec4 -> Float -> Vec4
-add c0 c1 amount = let
-    c2 = (c0+c1)*amount
-    c3 = c0*(1.0-amount)
-    in c2 + c3
-
-blend : Vec4 -> Vec4 -> Float -> Vec4
-blend c0 c1 amount = let
-    c2 = c0*(1.0-amount)
-    c3 = c1*amount
-    in c2 + c3
-
 scale_coords st_ amount x y = let
     st = st_ - cast2 0.5
     xy_ = st * (cast2 1.0 / vec2 (amount * x) (amount * y))
