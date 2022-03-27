@@ -26,9 +26,14 @@
         const canvas = document.getElementById("canvas");
         const sandbox = new GlslCanvas(canvas);
         fetch('std.frag')
-            .then(r => r.text())
-            .catch(_ => {
-                console.log("Couldn't load std.frag");
+            .then(r => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return r.text();
+            })
+            .catch(err => {
+                console.log("Couldn't load std.frag ", err);
                 return "";
             })
             .then(std => {
