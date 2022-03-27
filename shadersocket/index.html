@@ -27,6 +27,10 @@
         const sandbox = new GlslCanvas(canvas);
         fetch('std.frag')
             .then(r => r.text())
+            .catch(_ => {
+                console.log("Couldn't load std.frag");
+                return "";
+            })
             .then(std => {
                 fetch("shader.frag").then(r => r.text()).then(shader => {
                     sandbox.load(std + shader);
