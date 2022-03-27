@@ -19,5 +19,6 @@ for d in */ ; do
         echo "Copying index to $d"
         cp ./shadersocket/index.html "$d/index.html"
         cp ./shadersocket/puppy.jpg "$d/puppy.jpg"
+        cp ./shadersocket/std.frag "$d/std.frag"
     fi
 done
