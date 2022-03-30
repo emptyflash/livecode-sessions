@@ -11,3 +11,4 @@ done
 mkdir $dir
 touch $dir/shader.yin
 echo $dir
+cd $dir
