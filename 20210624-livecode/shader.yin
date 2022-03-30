@@ -2,8 +2,6 @@ uniform u_resolution : Vec2
 uniform u_tex0 : Sampler2D
 uniform u_time : Float
 
-src st_ tex = texture2D tex (fract st_)
-
 main coord = let
     st = coord / u_resolution
     color1 = src (scale_coords st 1.008 1.0 1.0) u_tex0
