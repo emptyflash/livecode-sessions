@@ -1,0 +1,22 @@
+uniform u_resolution : Vec2
+uniform u_time: Float
+uniform u_tex0 : Sampler2D
+
+
+color_noise : Vec2 -> Float -> Float -> Float -> Vec4
+color_noise st time scale offset = let
+    r = simplex_noise_ (vec3 (st.x * scale) (st.y * scale) (time * offset + 1.0))
+    g = simplex_noise_ (vec3 (st.x * scale) (st.y * scale) (time * offset + 3.0))
+    b = simplex_noise_ (vec3 (st.x * scale) (st.y * scale) (time * offset + 5.0))
+    in vec4 r g b 1.0
+
+main coord = let
+    st = coord / u_resolution
+    c0 = simplex_noise st u_time 3.0 1.0
+    c1 = src st u_tex0
+    c2 = blend c0 c1 0.9
+    c3 = color_noise st u_time 10.0 2.0
+    st2 = modulate_hue st u_resolution c3 1.0
+    c4 = src st2 u_tex0
+    c5 = blend c0 c1 0.99
+    in c2
