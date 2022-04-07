@@ -11,7 +11,7 @@ for d in */ ; do
     if [[ -f "$d/shader.yin" ]]; then
         echo "Compiling $d yin shader"
         pushd build/
-        cat "../$d/shader.yin" | ./yin > "../$d/shader.frag"
+        cat "../$d/shader.yin" | ./yin -l ./std.yin > "../$d/shader.frag"
         popd
     fi
 

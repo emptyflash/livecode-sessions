@@ -1,0 +1,2 @@
+main : Vec2 -> Vec4
+main coords = vec4 1.0 1.0 1.0 1.0

@@ -4,7 +4,6 @@ services:
         build: .
         volumes:
             - ${SHADER_FOLDER}:/shader
-            - "../../yinlang/std.yin:/std.yin"
             - "./watchcat.sh:/watchcat.sh"
     nginx:
         image: nginx

@@ -10,5 +10,5 @@ done
 
 mkdir $dir
 touch $dir/shader.yin
+cp ./build/std.yin $dir/std.yin
 echo $dir
-cd $dir
