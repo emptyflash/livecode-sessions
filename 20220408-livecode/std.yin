@@ -1,0 +1,331 @@
+cast2 v = vec2 v v
+cast3 v = vec3 v v v
+cast4 v = vec4 v v v v
+
+
+shape : Vec2 -> Float -> Float -> Float -> Vec4
+shape st_ sides radius smoothing = let
+    st = st_ * cast2 2.0 - cast2 1.0
+    pi = 3.1416
+    a = atan st.x st.y + pi
+    r = (2.0 * pi) / sides
+    d = cos ((floor (0.5 + a / r) * r - a)) * length st
+    c = cast3 (1.0 - smoothstep radius (radius + smoothing) d)
+    in vec4 c.r c.g c.b 1.0
+
+# Randomness
+
+random p = let
+    p1 = fract (p * 0.011)
+    p2 = p1 * 7.5
+    p3 = p2 * (p2 + p2)
+    in fract p3
+
+hash2 : Vec2 -> Vec2
+hash2 p0 = let
+    p1 = fract (p0.xyx * cast3 0.14)
+    p2 = p1 + cast3 (dot p1 (p1.yzx + cast3 3.333))
+    in vec2 (fract ((p2.x + p2.y) * p2.z)) (fract ((p2.z + p2.x) * p2.y))
+
+hash3 : Vec3 -> Vec3
+hash3 p = let
+    p1 = vec3 (dot p (vec3 127.1 311.7 74.7)) (dot p (vec3 269.5 183.3 246.1)) (dot p (vec3 113.5 271.9 124.6))
+    in (cast3 (0.0 - 1.0)) + (cast3 2.0) * fract (sin p1 * cast3 43758.5453123)
+
+noise_ p = let
+    const_step = vec3 110.0 241.0 171.0
+    i = floor p
+    f = fract p
+
+    n = dot i const_step
+    u = f * f * (cast3 3.0 - cast3 2.0 * f)
+
+    first_corner = random (n + dot const_step (vec3 0.0 0.0 0.0))
+    second_corner = random (n + dot const_step (vec3 1.0 0.0 0.0))
+    third_corner = random (n + dot const_step (vec3 0.0 1.0 0.0))
+    fourth_corner = random (n + dot const_step (vec3 1.0 1.0 0.0))
+    fifth_corner = random (n + dot const_step (vec3 0.0 0.0 1.0))
+    sixth_corner = random (n + dot const_step (vec3 1.0 0.0 1.0))
+    seventh_corner = random (n + dot const_step (vec3 0.0 1.0 1.0))
+    eighth_corner = random (n + dot const_step (vec3 1.0 1.0 1.0))
+
+    mix_x_1 = mix first_corner second_corner u.x
+    mix_x_2 = mix third_corner fourth_corner u.x
+    mix_y_1 = mix mix_x_1 mix_x_2 u.y
+
+    mix_x_3 = mix fifth_corner sixth_corner u.x
+    mix_x_4 = mix seventh_corner eighth_corner u.x
+    mix_y_2 = mix mix_x_3 mix_x_4 u.y
+
+    in mix mix_y_1 mix_y_2 u.z
+
+noise : Vec2 -> Float -> Float -> Float -> Vec4
+noise st time scale offset = let
+    noised = noise_ (vec3 (st.x * scale) (st.y * scale) (offset * time))
+    color = vec4 noised noised noised 1.0
+    in color
+
+# Adapted from https://www.shadertoy.com/view/tldSRj
+wave_noise_ : Vec3 -> Float -> Float
+wave_noise_ p kF = let
+    i = floor p
+    f0 = fract p
+    f1 = f0 * f0 * (cast3 3.0 - cast3 2.0 * f0)
+    s0 = sin (kF * dot p (hash3 (i + vec3 0.0 0.0 0.0)))
+    s1 = sin (kF * dot p (hash3 (i + vec3 1.0 0.0 0.0)))
+    s2 = sin (kF * dot p (hash3 (i + vec3 0.0 1.0 0.0)))
+    s3 = sin (kF * dot p (hash3 (i + vec3 1.0 1.0 0.0)))
+    s4 = sin (kF * dot p (hash3 (i + vec3 0.0 0.0 1.0)))
+    s5 = sin (kF * dot p (hash3 (i + vec3 1.0 0.0 1.0)))
+    s6 = sin (kF * dot p (hash3 (i + vec3 0.0 1.0 1.0)))
+    s7 = sin (kF * dot p (hash3 (i + vec3 1.0 1.0 1.0)))
+
+    mix0 = mix s0 s1 f1.x
+    mix1 = mix s2 s3 f1.x
+    mix3 = mix mix0 mix1 f1.y
+
+    mix4 = mix s4 s5 f1.x
+    mix5 = mix s6 s7 f1.x
+    mix6 = mix mix4 mix5 f1.y
+    in mix mix3 mix6 f1.z
+
+wave_noise : Vec2 -> Float -> Float -> Float -> Float -> Vec4
+wave_noise st time kF scale offset = let
+    noised = wave_noise_ (vec3 (st.x * scale) (st.y * scale) (offset * time)) kF
+    color = vec4 noised noised noised 1.0
+    in color
+
+gradient_noise_ : Vec3 -> Vec4
+gradient_noise_ x = let
+    i = floor x
+    w = fract x
+
+    u = w * w * w * (w * (w * cast3 6.0 - cast3 15.0) + cast3 10.0)
+    du = cast3 30.0 * w * w * (w * (w - cast3 2.0) + cast3 1.0)
+    ga = hash3 (i + vec3 0.0 0.0 0.0)
+    gb = hash3 (i + vec3 1.0 0.0 0.0)
+    gc = hash3 (i + vec3 0.0 1.0 0.0)
+    gd = hash3 (i + vec3 1.0 1.0 0.0)
+    ge = hash3 (i + vec3 0.0 0.0 1.0)
+    gf = hash3 (i + vec3 1.0 0.0 1.0)
+    gg = hash3 (i + vec3 0.0 1.0 1.0)
+    gh = hash3 (i + vec3 1.0 1.0 1.0)
+
+    va = dot ga (w - vec3 0.0 0.0 0.0)
+    vb = dot gb (w - vec3 1.0 0.0 0.0)
+    vc = dot gc (w - vec3 0.0 1.0 0.0)
+    vd = dot gd (w - vec3 1.0 1.0 0.0)
+    ve = dot ge (w - vec3 0.0 0.0 1.0)
+    vf = dot gf (w - vec3 1.0 0.0 1.0)
+    vg = dot gg (w - vec3 0.0 1.0 1.0)
+    vh = dot gh (w - vec3 1.0 1.0 1.0)
+
+    # God help the poor sap that ever needs to debug this
+    r = va + u.x*(vb-va) + u.y*(vc-va) + u.z*(ve-va) + u.x*u.y*(va-vb-vc+vd) + u.y*u.z*(va-vc-ve+vg) + u.z*u.x*(va-vb-ve+vf) + ((0.0-va)+vb+vc-vd+ve-vf-vg+vh)*u.x*u.y*u.z
+    gba = ga + (cast3 u.x)*(gb-ga) + (cast3 u.y)*(gc-ga) + (cast3 u.z)*(ge-ga) + (cast3 (u.x*u.y))*(ga-gb-gc+gd) + (cast3 (u.y*u.z))*(ga-gc-ge+gg) + (cast3 (u.z*u.x))*(ga-gb-ge+gf) + (((vec3 0.0 0.0 0.0)-ga)+gb+gc-gd+ge-gf-gg+gh)*(cast3 (u.x*u.y*u.z)) + du * (vec3 vb vc ve - cast3 va + u.yzx*vec3 (va-vb-vc+vd) (va-vc-ve+vg) (va-vb-ve+vf) + u.zxy* vec3 (va-vb-ve+vf) (va-vb-vc+vd) (va-vc-ve+vg) + u.yzx*u.zxy*cast3 ((0.0-va)+vb+vc-vd+ve-vf-vg+vh) )
+    in vec4 r gba.x gba.y gba.z
+
+permute x = let
+    a = vec2 34.0 1.0
+    c = (x * a.xxxx + a.yyyy) * x
+    in mod c 289.0
+
+taylor_inv_sqrt : Vec4 -> Vec4
+taylor_inv_sqrt r = let 
+    a = vec2 1.79284291400159 0.85373472095314
+    in a.xxxx - a.yyyy * r
+
+simplex_noise_ : Vec3 -> Float
+simplex_noise_ v = let
+    c = vec2 (1.0/6.0) (1.0/3.0)
+    d = vec4 0.0 0.5 1.0 2.0
+    e = vec3 1.0 2.0 3.0
+    f = vec4 49.0 7.0 0.6 (1.0 / 7.0)
+
+    # First corner
+    dot1 = dot v c.yyy
+    i = floor (v + vec3 dot1 dot1 dot1)
+    dot2 = dot i c.xxx
+    x0 = v - i + vec3 dot2 dot2 dot2
+
+    # Other corners
+    g = step x0.yzx x0.xyz
+    l = e.xxx - g
+    i1 = min g.xyz l.zxy
+    i2 = max g.xyz l.zxy
+
+    x1 = x0 - i1 + e.xxx * c.xxx
+    x2 = x0 - i2 + e.yyy * c.xxx
+    x3 = x0 - e.xxx + e.zzz * c.xxx
+
+    i3 = mod i 289.0
+    p = permute (permute (permute ( i3.zzzz + vec4 0.0 i1.z i2.z 1.0 ) + i3.yyyy + vec4 0.0 i1.y i2.y 1.0 ) + i3.xxxx + vec4 0.0 i1.x i2.x 1.0 )
+
+    # Gradients
+    # ( N*N points uniformly over a square, mapped onto an octahedron.)
+    ns = f.www * d.wyz - d.xzx
+
+    j_ = f.xxxx * floor (p * ns.zzzz * ns.zzzz)
+    j = p - j_
+
+    x_ = floor (j * ns.zzzz)
+    y_ = floor (j - f.yyyy * x_)
+
+    x = x_ * ns.xxxx + ns.yyyy
+    y = y_ * ns.xxxx + ns.yyyy
+    h = e.xxxx - abs x - abs y
+
+    b0 = vec4 x.x x.y y.x y.y
+    b1 = vec4 x.z x.w y.z y.w
+
+    s0 = floor b0 * e.yyyy + e.xxxx
+    s1 = floor b1 * e.yyyy + e.xxxx
+    sh = d.xxxx - step h d.xxxx # TODO implement negative instead of 0 minus
+
+    a0 = b0.xzyw + s0.xzyw * sh.xxyy
+    a1 = b1.xzyw + s1.xzyw * sh.zzww
+
+    p0_ = vec3 a0.x a0.y h.x
+    p1_ = vec3 a0.z a0.w h.y
+    p2_ = vec3 a1.x a1.y h.z
+    p3_ = vec3 a1.z a1.w h.w
+
+    # Normalise gradients
+    norm = taylor_inv_sqrt (vec4 (dot p0_ p0_) (dot p1_ p1_) (dot p2_ p2_) (dot p3_ p3_))
+    p0 = p0_ * norm.xxx
+    p1 = p1_ * norm.yyy
+    p2 = p2_ * norm.zzz
+    p3 = p3_ * norm.www
+    # Mix final noise value
+    m_ = max (f.zzzz - vec4 (dot x0 x0) (dot x1 x1) (dot x2 x2) (dot x3 x3)) d.xxxx
+    m = m_ * m_
+
+    final = 42.0 * dot (m*m) (vec4 (dot p0 x0) (dot p1 x1) (dot p2 x2) (dot p3 x3))
+    in final
+
+simplex_noise : Vec2 -> Float -> Float -> Float -> Vec4
+simplex_noise st time scale offset = let
+    noised = simplex_noise_ (vec3 (st.x * scale) (st.y * scale) (offset * time))
+    color = vec4 noised noised noised 1.0
+    in color
+
+fbm_ p = let
+    value_1 = 0.0
+    amplitude_1 = 0.5
+    frequency_1 = 0.0
+
+    value_2 = value_1 + amplitude_1 * wave_noise_ p 2.0
+    amplitude_2 = amplitude_1 * 0.5
+    p_2 = p * vec3 2.0 2.0 2.0
+
+    value_3 = value_2 + amplitude_2 * wave_noise_ p_2 2.0
+    amplitude_3 = amplitude_2 * 0.5
+    p_3 = p_2 * vec3 2.0 2.0 2.0
+
+    value_4 = value_3 + amplitude_3 * wave_noise_ p_3 2.0
+    amplitude_4 = amplitude_3 * 0.5
+    p_4 = p_3 * vec3 2.0 2.0 2.0
+
+    value_5 = value_4 + amplitude_4 * wave_noise_ p_4 2.0
+    amplitude_5 = amplitude_4 * 0.5
+    p_5 = p_4 * vec3 2.0 2.0 2.0
+
+    value_6 = value_5 + amplitude_5 * wave_noise_ p_5 2.0
+    amplitude_6 = amplitude_5 * 0.5
+    p_6 = p_5 * vec3 2.0 2.0 2.0
+
+    value_7 = value_6 + amplitude_6 * wave_noise_ p_6 2.0
+    amplitude_7 = amplitude_6 * 0.5
+    p_7 = p_6 * vec3 2.0 2.0 2.0
+
+    value_8 = value_7 + amplitude_7 * wave_noise_ p_7 2.0
+    in value_8
+
+fbm : Vec2 -> Float -> Float -> Float -> Vec4
+fbm st time scale offset = let
+    moved = fbm_ (vec3 (st.x * scale) (st.y * scale) (offset * time))
+    in vec4 moved moved moved 1.0
+
+dw_ p = let
+    q = vec3 (fbm_ p) (fbm_ (p + vec3 5.2 1.3 0.0)) p.z
+    r_1 = p + vec3 4.0 4.0 4.0 * q + vec3 1.7 9.2 0.0
+    r_2 = p + vec3 4.0 4.0 4.0 * q + vec3 8.3 2.8 0.0
+    r = vec3 (fbm_ r_1) (fbm_ r_2) p.z
+    in fbm_ (p + vec3 4.0 4.0 4.0 * r)
+
+dw : Vec2 -> Float -> Float -> Float -> Vec4
+dw st time scale offset = let
+    warped = dw_ (vec3 (st.x * scale) (st.y * scale) (offset * time))
+    in vec4 warped warped warped 1.0
+
+kaleid st nSides = let
+  offset = st - vec2 0.5 0.5
+  r = length offset
+  a = atan offset.x offset.y
+  pi = 2.0 * 3.1416
+  b = mod a (pi / nSides)
+  c = abs (b - pi / nSides / 2.0)
+  d = vec2 r r * vec2 (cos c) (sin c)
+  in d
+
+luminance rgb = let
+    w = vec3 0.2125 0.7154 0.0721
+    in dot rgb w
+          
+mask : Vec4 -> Vec4 -> Vec4
+mask c0 c1 = let
+    a = luminance c1.rgb
+    b = vec3 a a a * c0.rgb
+    in vec4 b.r b.g b.b a
+
+add : Vec4 -> Vec4 -> Float -> Vec4
+add c0 c1 amount = (c0 + c1) * cast4 amount + c0 * cast4 (1.0 - amount)
+
+blend : Vec4 -> Vec4 -> Float -> Vec4
+blend c0 c1 amount = c0 * cast4 (1.0 - amount) + c1 * cast4 amount
+
+diff : Vec4 -> Vec4 -> Vec4
+diff c0 c1 = let
+    difference = c0.rgb - c1.rgb
+    absolute = abs difference
+    in vec4 absolute.r absolute.g absolute.b (max c0.a c1.a)
+
+layer : Vec4 -> Vec4 -> Vec4
+layer c0 c1 = let
+    rgb = mix c0.rgb c1.rgb c1.a
+    in vec4 rgb.r rgb.g rgb.b (c0.a+c1.a)
+
+scale_coords st_ amount x y = let
+    st = st_ - cast2 0.5
+    xy_ = st * (cast2 1.0 / vec2 (amount * x) (amount * y))
+    xy = xy_ + cast2 0.5
+    in xy
+
+osc : Vec2 -> Float -> Float -> Float -> Float -> Vec4
+osc st time freq sync offset = let
+    r = sin ((st.x - offset / freq + time * sync)*freq) * 0.5 + 0.5
+    g = sin ((st.x + time * sync) * freq) * 0.5 + 0.5
+    b = sin ((st.x + offset / freq + time * sync) * freq) * 0.5  + 0.5
+    color = vec4 r g b 1.0
+    in color
+
+modulate : Vec2 -> Vec4 -> Float -> Vec2
+modulate st color amount = let
+    a = color.xy * cast2 amount
+    in st + a
+
+# TODO why did the type checker choke so bad on this
+modulate_hue : Vec2 -> Vec2 -> Vec4 -> Float -> Vec2
+modulate_hue st resolution c1 amount = let
+    a = vec2 (c1.g - c1.r) (c1.b - c1.g) 
+    b = st + (a * (cast2 amount) * (cast2 1.0 / resolution))
+    in b
+
+src st_ tex = texture2D tex (fract st_)
+
+rotate st time angle speed = let
+    xy_ = st - cast2 0.5
+    a = angle + speed * time
+    x = dot xy_ (vec2 (cos angle) (0.0 - sin angle)) 
+    y = dot xy_ (vec2 (sin angle) (cos angle))
+    in vec2 x y + cast2 0.5
