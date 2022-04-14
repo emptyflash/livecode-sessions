@@ -12,6 +12,7 @@ services:
         volumes:
             - .:/usr/share/nginx/html
             - ./nginx.conf:/etc/nginx/nginx.conf
+            - ${SHADER_FOLDER}:/usr/share/nginx/html/session
         depends_on:
             - watchcat
     ngrok:
