@@ -2,6 +2,8 @@
     <head>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/emptyflash/GlslCanvas@master/dist/GlslCanvas.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/joewalnes/reconnecting-websocket@master/reconnecting-websocket.min.js"></script>
+        <script type="text/javascript" src="https://unpkg.com/recordrtc@5.6.2/RecordRTC.js"></script>
+        <script type="text/javascript" src="https://www.webrtc-experiment.com/screenshot.js"></script>
     </head>
 
     <style>
@@ -57,12 +59,24 @@
 
         const audioCtx = new AudioContext();
         const audioElement = document.querySelector("audio");
+        const recorder = new CanvasRecorder(canvas, { disableLogs: true, useWhammyRecorder: true });
         document.addEventListener("keydown", e => {
             if (e.key == "m") {
                 audioElement.muted = !audioElement.muted;
             }
             if (e.key == "p") {
+                audioCtx.resume()
                 audioElement.paused ? audioElement.play() : audioElement.pause()
+            }
+            if (e.key == "r") {
+                canvas.width = 1920
+                canvas.height = 1080
+                recorder.record();
+                audioCtx.resume();
+                audioElement.play();
+            }
+            if (e.key == "s") {
+                recorder.stop((blob) => invokeSaveAsDialog(blob))
             }
         });
         if (audioCtx.state === 'suspended') {
@@ -70,14 +84,14 @@
                 audioCtx.resume().then(() => {
                     document.body.removeEventListener('touchstart', unlock);
                     document.body.removeEventListener('touchend', unlock);
-                    document.body.removeEventListener('click', unlock);
+                    //document.body.removeEventListener('click', unlock);
                 });
                 audioElement.play();
             };
 
             document.body.addEventListener('touchstart', unlock, false);
             document.body.addEventListener('touchend', unlock, false);
-            document.body.addEventListener('click', unlock, false);
+            //document.body.addEventListener('click', unlock, false);
         }
         const analyser = audioCtx.createAnalyser();
         //analyser.minDecibels = -90;
