@@ -5,13 +5,13 @@ shopt -s extglob
 for d in */ ; do
     echo "Running build for $d"
 
-    # Skip the build folder
-    [[ $(basename $d) =~ ^(build)$ ]] && continue
+    # Skip non-session folders
+    [[ $(basename $d) =~ ^(build|render|yinlang|shadersocket)$ ]] && continue
 
     if [[ -f "$d/shader.yin" ]]; then
         echo "Compiling $d yin shader"
         pushd build/
-        cat "../$d/shader.yin" | ./yin -l ./std.yin > "../$d/shader.frag"
+        cat "../$d/shader.yin" | ./yin -l "../$d/std.yin" > "../$d/shader.frag"
         popd
     fi
 
