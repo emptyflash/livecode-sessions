@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/emptyflash/GlslCanvas@master/dist/GlslCanvas.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/joewalnes/reconnecting-websocket@master/reconnecting-websocket.min.js"></script>
+        <script type="text/javascript" src="https://unpkg.com/recordrtc@5.6.2/RecordRTC.js"></script>
+        <script type="text/javascript" src="https://www.webrtc-experiment.com/screenshot.js"></script>
+    </head>
+
+    <style>
+            body {
+                background: #101515;
+                overflow-y: hidden;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            #canvas {
+                width: 100%;
+                height: 100%;
+            }
+    </style>
+
+    <body>
+        <canvas data-textures="puppy.jpg" id="canvas"></canvas>
+        <audio crossorigin="anonymous"><source src="https://cdn.jwplayer.com/videos/JLGR8hRd-eP1tovtM.m4a"></source></audio>
+    </body>
+
+    <script type="text/javascript">
+        const canvas = document.getElementById("canvas");
+        const sandbox = new GlslCanvas(canvas);
+        fetch('std.frag')
+            .then(r => r.text())
+            .then(std => {
+                fetch("shader.frag").then(r => r.text()).then(shader => {
+                    sandbox.load(std + shader);
+                });
+                const scheme = window.location.protocol.includes("s") ? "wss" : "ws";
+                var ws = new ReconnectingWebSocket(`${scheme}://${window.location.host}/websocket`);
+                ws.onopen = function() {
+                    console.log('CONNECT');
+                };
+                ws.onclose = function(data) {
+                    console.log('DISCONNECT', data);
+                };
+                let currentShader = "";
+                ws.onmessage = function(event) {
+                    if (event.data === '---') {
+                        console.log(currentShader);
+                        if (currentShader.trim() === "") {
+                            return;
+                        }
+                        sandbox.load(std + currentShader);
+                        currentShader = "";
+                    } else {
+                        currentShader += event.data + '\n';
+                    }
+                };
+            });
+
+        const audioCtx = new AudioContext();
+        const audioElement = document.querySelector("audio");
+        const recorder = new CanvasRecorder(canvas, { disableLogs: true, useWhammyRecorder: true });
+        document.addEventListener("keydown", e => {
+            if (e.key == "m") {
+                audioElement.muted = !audioElement.muted;
+            }
+            if (e.key == "p") {
+                audioCtx.resume()
+                audioElement.paused ? audioElement.play() : audioElement.pause()
+            }
+            if (e.key == "r") {
+                canvas.width = 1920
+                canvas.height = 1080
+                recorder.record();
+                audioCtx.resume();
+                audioElement.play();
+            }
+            if (e.key == "s") {
+                recorder.stop((blob) => invokeSaveAsDialog(blob))
+            }
+        });
+        if (audioCtx.state === 'suspended') {
+            const unlock = () => {
+                audioCtx.resume().then(() => {
+                    document.body.removeEventListener('touchstart', unlock);
+                    document.body.removeEventListener('touchend', unlock);
+                    document.body.removeEventListener('click', unlock);
+                });
+                audioElement.play();
+            };
+
+            document.body.addEventListener('touchstart', unlock, false);
+            document.body.addEventListener('touchend', unlock, false);
+            document.body.addEventListener('click', unlock, false);
+        }
+        const analyser = audioCtx.createAnalyser();
+        //analyser.minDecibels = -90;
+        //analyser.maxDecibels = -10;
+        analyser.fftSize = 32;
+        analyser.smoothingTimeConstant = 0.87;
+
+        let success = true;
+        const source = audioCtx.createMediaElementSource(audioElement);
+        source.connect(analyser);
+        analyser.connect(audioCtx.destination);
+
+        const samples = analyser.frequencyBinCount;
+        const spectrumBuffer = new Uint8Array(samples);
+        let firstRender = true;
+        let audioTime = 0;
+        sandbox.on('render', () => {
+            if (firstRender) {
+                sandbox.width = sandbox.width - 1;
+                firstRender = false;
+            }
+            analyser.getByteFrequencyData(spectrumBuffer);
+            let audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
+            sandbox.setUniforms({'u_audio': audio});
+            audioTime += audio.map(a => a / 255.0).reduce((acc, a) => acc + a, 0) / audio.length;
+            sandbox.setUniforms({'u_audio_time': audioTime});
+            sandbox.setUniforms({'u_audio_time_real': audioElement.currentTime});
+            const gl = sandbox.gl;
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gl.canvas);
+        });
+    </script>
+</html>
+
