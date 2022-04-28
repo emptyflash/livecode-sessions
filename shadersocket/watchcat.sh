@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cat_yin() {
-    cat shader/shader.yin | yin -l ./std.yin
+    cat shader/shader.yin | yin -l shader/std.yin
 }
 
 if [ -f shader/shader.yin ]; then
