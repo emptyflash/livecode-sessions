@@ -114,7 +114,7 @@
                 firstRender = false;
             }
             analyser.getByteFrequencyData(spectrumBuffer);
-            let audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[14]];
+            let audio = [spectrumBuffer[2], spectrumBuffer[6], spectrumBuffer[10], spectrumBuffer[13]];
             sandbox.setUniforms({'u_audio': audio});
             audioTime += audio.map(a => a / 255.0).reduce((acc, a) => acc + a, 0) / audio.length;
             sandbox.setUniforms({'u_audio_time': audioTime});
