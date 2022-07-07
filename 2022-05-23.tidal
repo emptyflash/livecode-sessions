@@ -1,0 +1,6 @@
+d1 $ brak $ s "hh(13, 16)", -- "hh!8"
+d2 $ brak $ s "sd:2(9,16)" # gain 0.8, -- sd(3,8)
+d3 $ s "~ ~ ~ cp:3*2" # vowel "<a e i o u>"
+d4 $ struct "t(3,8,2)" $ s "jazz"
+d5 $ every 2 (hurry 2) $ n "c'maj a'maj f'maj e'maj" # s "arp:2" # legato 1 # gain 0.6
+d6 $ every 2 (hurry 2) $ n ("1(5,8)" |* irand 7) # s "kurt"
