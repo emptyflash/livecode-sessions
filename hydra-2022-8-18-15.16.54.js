@@ -1,3 +1,4 @@
+(async () => {
 await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
 
 osc(1, 1, 1)
@@ -11,3 +12,4 @@ osc(1, 1, 1)
 		.scale(0.7)
 	)
 	.out()
+})()

@@ -1,3 +1,4 @@
+(async () => {
 await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
 
 src(o0)
@@ -14,3 +15,4 @@ src(o0)
 	// 	.modulateScale(shape(99, 0.1, 0.6)
 	// 		.modulate(warp(.1, .1)).scrollY(.1,.1), 10)
 	.out()
+})()
