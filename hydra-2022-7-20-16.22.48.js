@@ -1,0 +1,8 @@
+src(o0)
+	.mask(shape(4,1)).invert()
+	.scale(0.99)
+	.scrollX(0.1, .2)
+	.scrollY(0.1, .2)
+	.rotate(1,1)
+	.kaleid(2)
+	.out()
