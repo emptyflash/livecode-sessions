@@ -2,6 +2,8 @@
 
 shopt -s extglob
 
+echo '[' > manifest.json
+
 for d in */ ; do
     echo "Running build for $d"
 
@@ -21,4 +23,20 @@ for d in */ ; do
         cp ./shadersocket/puppy.jpg "$d/puppy.jpg"
         cp ./shadersocket/std.frag "$d/std.frag"
     fi
+
+    echo "\"$d\"," >> manifest.json
 done
+
+LAST_FILE=""
+for f in *.js; do
+
+    if [ ! -z $LAST_FILE ]; then
+        echo "\"$f\"," >> manifest.json
+    fi
+    LAST_FILE=$f
+done
+if [ ! -z $LAST_FILE ]; then
+    echo "\"$f\"" >> manifest.json
+fi
+
+echo ']' >> manifest.json
