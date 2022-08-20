@@ -31,12 +31,12 @@ LAST_FILE=""
 for f in *.js; do
 
     if [ ! -z $LAST_FILE ]; then
-        echo "\"$f\"," >> manifest.json
+        echo "\"$LAST_FILE\"," >> manifest.json
     fi
     LAST_FILE=$f
 done
 if [ ! -z $LAST_FILE ]; then
-    echo "\"$f\"" >> manifest.json
+    echo "\"$LAST_FILE\"" >> manifest.json
 fi
 
 echo ']' >> manifest.json

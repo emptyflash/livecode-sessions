@@ -1,4 +1,3 @@
-
 (async () => {
 await loadScript("https://cdn.statically.io/gl/metagrowing/extra-shaders-for-hydra/main/lib/all.js")
 
