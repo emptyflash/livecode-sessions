@@ -1,0 +1,19 @@
+// choose 15 random samples from a list of
+// predefined samplename. Play those samples 
+// sequentially for every time interval
+set tempo 112
+
+list samples [tabla_lo tabla_hi tabla_mid tabla_hi_short]
+list selection choose(20 samples)
+
+new sample selection time(1/16) play(euclid(3 8) 2) fx(shift random(10 0 12))
+new sample kick_house time(1/8) play(hexBeat(deadbeef)) gain(1)
+new sample hat_click time(1/16) play(euclid(9 16)) fx(drive random(16 0 5))
+new sample snare_hvy time(1/8) play([1 0 0.2 1 0.8])
+
+new synth saw name(bass) 
+    set bass note(random(16 0 12) 0) time(1/8) super(0.452 11)
+    set bass fx(filter low cosine(16 500 3000) 0.6)
+    set bass fx(lfo 1/16 up) gain(2) shape(1 random(8 100 200) 1)
+
+set all fx(reverb 0.3 3)

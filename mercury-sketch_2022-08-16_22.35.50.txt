@@ -1,0 +1,9 @@
+set scale minor c
+set randomSeed 1238
+list notes palindrome(random(16 1 0 12))
+new synth saw time(1/8) note(notes 0) fx(filter low sine(16 1 600 3000) 1.2) gain(0.5)
+new sample kick_ua time(1/8) play(randomF(16 0 1)) gain(1)
+new sample hat_click time(1/16) play(hexBeat(cafebeef))
+new sample clap_909 time(1/16) play(randomF(16 0 1)) pan(random)
+list notes clone(random(13 0 24) 3 4 8)
+new synth sine time(1/8) note(notes 1) fx(reverb 0.4 0.4) fx(delay 3/16 5/16 1) super(.6 3)
