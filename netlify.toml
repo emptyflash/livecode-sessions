@@ -4,8 +4,8 @@
     Access-Control-Allow-Origin = "*"
 
 [[redirects]]
-    from = "/hydra-extras/*"
+    from = "/hydra-extras.js"
     status = 301
     force = false
     query = {path = ":path"}
-    to = "https://gitlab.com/emptyflash/extra-shaders-for-hydra/-/raw/main/lib/:splat"
+    to = "https://gitlab.com/emptyflash/extra-shaders-for-hydra/-/raw/main/lib/all.js"
