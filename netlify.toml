@@ -5,7 +5,6 @@
 
 [[redirects]]
     from = "/hydra-extras.js"
-    status = 301
-    force = false
-    query = {path = ":path"}
+    status = 200
+    force = true
     to = "https://gitlab.com/emptyflash/extra-shaders-for-hydra/-/raw/main/lib/all.js"
