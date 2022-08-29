@@ -2,3 +2,10 @@
   for = "/*"
     [headers.values]
     Access-Control-Allow-Origin = "*"
+
+[[redirects]]
+    from = "/hydra-extras/*"
+    status = 301
+    force = false
+    query = {path = ":path"}
+    to = "https://gitlab.com/emptyflash/extra-shaders-for-hydra/-/raw/main/lib/:splat"
