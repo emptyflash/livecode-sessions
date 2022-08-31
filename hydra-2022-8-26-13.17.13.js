@@ -1,3 +1,6 @@
+// Genesis
+// by Cameron Alexander (https://emtpyfla.sh)
+
 src(o0)
 	.layer(osc(60, 0)
 		.mask(shape(4, .1, .2)
