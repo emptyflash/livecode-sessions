@@ -7,4 +7,4 @@
     from = "/hydra-extras.js"
     status = 301
     force = false
-    to = "https://gitlab.com/emptyflash/extra-shaders-for-hydra/-/raw/main/lib/all.js"
+    to = "https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js"
