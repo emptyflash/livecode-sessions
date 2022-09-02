@@ -1,0 +1,16 @@
+// Genesis
+// by Cameron Alexander (https://emtpyfla.sh)
+
+src(o0)
+	.layer(osc(60, 0)
+		.mask(shape(4, .1, .2)
+			.modulate(noise(5, 1)))
+		.scrollX(()=>Math.sin(time*0.5)*0.5, 0)
+        .scrollY(()=>Math.cos(time*0.5)*0.5, 0)
+		.mult(solid(0, 0, 0, 0), () => Math.floor(time*2) % 5 == 1 ? 0 : 1))
+	.scrollX(.0001, [.000001, -.000001])
+	.rotate([.01, .001].fast(0.5), .000001)
+	.modulateScale(noise([4, 3, 2], 0), 0.01)
+	.scale([1, .995, 1])
+	.modulate(o0, 0.001)
+	.out()

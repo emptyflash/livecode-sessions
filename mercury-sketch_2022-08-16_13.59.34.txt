@@ -1,0 +1,15 @@
+set tempo 162
+set scale minor c
+set randomSeed 1236
+
+list notes merge(clone(random(8 0 24) 3 4 7) pisano(12 32))
+new synth saw note(notes 0) name(syn)
+    set syn shape(1 random(128 50 500)) time(1/16) 
+    set syn fx(reverb 0.9 2) fx(filter low palindrome(random(8 500 3000)) 0.7)
+    
+ new sample kick_house time(1/4) play([0.1 1 0.2 0.8])
+ new sample hat_click time(1/16) play(euclid(9,16)) gain(.7)
+ new sample snare_hvy time(1/4) play(hexBeat(cafed00d)) fx(drive random(16 0 5))
+ new sample clap_808 time(1/4) play(euclid(3,16)) fx(squash random(16 0 12))
+ 
+ new sample choir_01 time(1/4) start(randomF(16 0 1)) fx(lfo randomF())

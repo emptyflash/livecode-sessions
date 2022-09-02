@@ -1,0 +1,10 @@
+set bpm 132
+set scale phrygian
+list kicks choose(8 [kick_808 kick_ua kick_house kick_deep])
+new sample kicks time(1/4)
+new sample noise_e_01 time(1/16) shape(0 30 10) offset([0.1 0.2 0.3]) fx(filter band 3000 0.2) gain(2)
+new sample noise_e_01 time(1/8 1/7) shape(0 30 10) offset([0.3 0.2 0.1]) fx(filter band 3000 0.2) fx(drive 10)
+new synth saw time(3/8) fx(reverb) fx(lfo 1/16) fx(delay 1/16 3/16 0.9) fx(filter low 3000 0.3) super(0.1 11)
+new synth saw time(1) shape(1 400) note(0 -1) fx(reverb) fx(delay 1/16 3/16 randomF(8 0.7 1.1)) fx(filter low 2000 0.3) super(0.2 5)
+list notes clone(palindrome([0 3 7]) 0 0 -1 3 -1 5)
+new synth saw time(1/8) shape(1 400) note(notes 1) fx(reverb) fx(delay 3/16 5/16 randomF(8 0.7 1.2)) fx(filter low 1200 0.9) super(0.1 3)

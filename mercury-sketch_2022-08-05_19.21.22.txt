@@ -1,0 +1,10 @@
+set tempo 162
+new sample hat_min time(1/16) play(euclidean(13 16))
+new sample kick_deep time(1/8) play([1 0.2 0.3 1])
+new sample snare_hvy time(1/8) play(hexBeat([deadbeef cafed00d]))
+new synth saw name(bass)
+set bass time(1/8) note(pisano(12 20) 0) shape(1 250 1)
+set bass fx(filter low 1200 0.2) super(0.142 7)
+list loops [amen amen_alt house]
+list picked pick(10 loops)
+//new loop loops
