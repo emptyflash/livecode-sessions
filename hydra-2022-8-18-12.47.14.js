@@ -1,5 +1,5 @@
 (async () => {
-await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
+await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
 
 src(o0)
 	.scale(0.8)

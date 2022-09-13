@@ -2,7 +2,7 @@
 // by Cameron Alexander (https://emptyfla.sh)
 
 (async () => {
-await loadScript("https://livecode.emptyfla.sh/hydra-extras.js")
+await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
 
 let frame = 0;
 

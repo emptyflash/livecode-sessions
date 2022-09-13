@@ -1,7 +1,7 @@
 // Machine Elves
 // Cameron Alexander (emptyfla.sh)
 (async () => {
-await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
+await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
 
 osc(2, .1, 126)
 	.modulate(warp(7, .1), 2)
