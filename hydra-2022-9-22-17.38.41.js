@@ -1,0 +1,18 @@
+ osc(7, 0.1, 2)
+ 	.modulate(noise())
+ 	.layer(
+ 		src(o0)
+ 		.modulateHue(o0, [0.1, 1])
+ 		.scale(1.0, [1.001, 0.999, 0.999], [0.999, 1.001, 0.999])
+ 		.rotate(.001, 0)
+ 		.mask(
+ 			noise(100, 0.1)
+ 			.thresh()
+ 			.luma()
+ 			.invert()
+ 		)
+ 	)
+ 	.modulateScale(shape(4, .01, 0.5)
+ 		.rotate(Math.PI / 4, 0.1), -0.01)
+ 	.modulateScale(shape(4, .07, 0.0001), -0.07)
+ 	.out()
