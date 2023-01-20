@@ -1,0 +1,8 @@
+// licensed with CC BY-NC-SA 4.0 https://creativecommons.org/licenses/by-nc-sa/4.0/
+await loadScript("https://cdn.statically.io/gl/metagrowing/extra-shaders-for-hydra/main/lib/lib-cond.js")
+
+// move mouse from left to right
+noise().repeat() // default branch
+	.ifpos(osc(5, .2).repeat().kaleid(), // alternate branch, only when condidition is met
+         () => mouse.x - width / 2) // value for the condition "if positive" to be tested
+	.out(o0)

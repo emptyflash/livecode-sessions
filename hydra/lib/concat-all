@@ -1,0 +1,8 @@
+#!/bin/bash
+cat lib-color.js    > all.js
+cat lib-cond.js    >> all.js
+cat lib-noise.js   >> all.js
+cat lib-pattern.js >> all.js
+cat lib-screen.js  >> all.js
+cat lib-space.js   >> all.js
+cat lib-util.js   >> all.js

@@ -2,9 +2,3 @@
   for = "/*"
     [headers.values]
     Access-Control-Allow-Origin = "*"
-
-[[redirects]]
-    from = "/hydra/*"
-    status = 301
-    force = false
-    to = "https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/:splat"

@@ -40,3 +40,7 @@ if [ ! -z $LAST_FILE ]; then
 fi
 
 echo ']' >> manifest.json
+
+cd hydra/lib
+./concat-all
+cp all.js ../

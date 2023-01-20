@@ -1,0 +1,5 @@
+// s0.initCam()
+s0.initScreen(3)
+// src(s0).splitviewh(src(s0).invert(), () => 1-cc[0]).out(o0)
+src(s0).splitviewh(src(s0).invert(), () => 0.1+1.8*a.fft[0]).out(o0)
+render(o0)
