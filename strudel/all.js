@@ -12,6 +12,29 @@ if (!document.getElementById('hydra-canvas')) {
   s0.init({src: testCanvas})
 }
 
+await loadCsound`
+instr SubFade 
+  asig = vco2(p5, p4)
+  asig += vco2(p5, p4 * 1.01)
+  asig += vco2(p5, p4 * 0.995)
+  asig *= 0.33 
+  asig = zdf_ladder(asig, expseg(100, p3*0.5, 22000, p3*0.5, 100), 12) 
+  asig = declick(asig)
+  pan_verb_mix(asig, xchan:i("SubFade.pan", 0.5), xchan:i("SubFade.rvb", chnget:i("rvb.default")))
+endin`
+
+function fibonacci(num, memo) {
+  memo = memo || {};
+
+  if (memo[num]) return memo[num];
+  if (num <= 1) return 1;
+
+  return memo[num] = fibonacci(num - 1, memo) + fibonacci(num - 2, memo);
+}
+const _pisano = m => signal((t) => fibonacci(t) % m)
+const pisano = mpat => reify(mpat).fmap(_pisano).innerJoin()
+window.pisano = pisano
+
 async function riffusion(sampleName, prompt, seed, steps, overrides) {
   overrides = overrides || {}
   steps = steps || 4;
