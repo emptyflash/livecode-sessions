@@ -74,3 +74,9 @@ setFunction({
 	glsl: `   _st.y += scrollY_ + time*speed;
    return _st;`
 });
+
+
+const { sculptToHydraRenderer } = await import("https://cdn.jsdelivr.net/gh/emptyflash/shader-park-core/dist/shader-park-core.esm.js")
+window.sculptToHydraRenderer = sculptToHydraRenderer
+
+await import("https://emptyfla.sh/bl4st/bundle-global.js")
