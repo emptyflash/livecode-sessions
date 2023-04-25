@@ -1,5 +1,5 @@
 (async () => {
-await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
+await import("https://livecode.emptyfla.sh/hydra/all.js")
 updateTextureParams(o0, {wrap: ["mirror", "mirror"]})
 src2(o0)
 	.blend(osc(15, 0.1, 1), 0.1)

@@ -24,6 +24,7 @@ export function updateTextureParams(output, params) {
     depthStencil: false
   }))
 }
+window.updateTextureParams = updateTextureParams
 
 setFunction({
   name: 'src2',
@@ -80,3 +81,23 @@ const shaderPark = await import("https://cdn.jsdelivr.net/gh/emptyflash/shader-p
 window.sculptToHydraRenderer = shaderPark.sculptToHydraRenderer
 
 await import("https://emptyfla.sh/bl4st/bundle-global.js")
+
+setFunction({
+	name: 'mirroredRepeat',
+	type: 'coord',
+	inputs: [{
+			type: 'float',
+			name: 'repeatX',
+			default: 3,
+		},
+		{
+			type: 'float',
+			name: 'repeatY',
+			default: 3,
+		}
+	],
+	glsl: 'vec2 st = _st * vec2(repeatX, repeatY);'+
+         'st.x = mod(floor(st.x), 2.0) == 0.0 ? fract(st.x) : 1.0 - fract(st.x);'+
+         'st.y = mod(floor(st.y), 2.0) == 0.0 ? fract(st.y) : 1.0 - fract(st.y);'+
+        'return st;'
+})

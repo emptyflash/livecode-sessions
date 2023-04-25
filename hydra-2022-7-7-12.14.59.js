@@ -1,5 +1,5 @@
 (async () => {
-await loadScript("https://cdn.statically.io/gl/metagrowing/extra-shaders-for-hydra/main/lib/all.js")
+await import("https://cdn.statically.io/gl/metagrowing/extra-shaders-for-hydra/main/lib/all.js")
 
 osc(2, 1, 127)
 	.kaleid(10)

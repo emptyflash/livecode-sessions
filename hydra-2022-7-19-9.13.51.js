@@ -1,5 +1,5 @@
 (async () => {
-await loadScript("https://cdn.statically.io/gl/metagrowing/extra-shaders-for-hydra/main/lib/all.js")
+await import("https://cdn.statically.io/gl/metagrowing/extra-shaders-for-hydra/main/lib/all.js")
 
 src(o0)
 	.mask(shape(4,2))

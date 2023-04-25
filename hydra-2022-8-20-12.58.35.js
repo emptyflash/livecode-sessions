@@ -2,7 +2,7 @@
 // Cameron Alexander (emptyfla.sh)
 
 (async () => {
-await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
+await import("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
 
 
 src(o0)

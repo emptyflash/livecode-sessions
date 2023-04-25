@@ -2,7 +2,7 @@
 // Cameron Alexander (emptyfla.sh)
 
 (async () => {
-await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
+await import("https://livecode.emptyfla.sh/hydra/all.js")
 
 osc(1, 1, 1)
 	.modulateScale(warp(2, .1, 2, 2, 2), 2)

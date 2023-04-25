@@ -2,7 +2,7 @@
 // by Cameron Alexander (https://emptyfla.sh)
 
 (async () => {
-await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/9fb1c76e8/lib/all.js")
+await import("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/9fb1c76e8/lib/all.js")
 
 let frame = 0;
 
