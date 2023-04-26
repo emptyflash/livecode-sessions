@@ -106,6 +106,7 @@ async function startMuse() {
     eegAverages[reading.electrode] = reading.samples.reduce((a,b) => a+b, 0) / reading.samples.length;
   });
 }
+window.startMuse;
 
 function scale (number, inMin, inMax, outMin, outMax) {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
@@ -116,5 +117,5 @@ const eeg = (electrodePattern) => {
     let val = scale(eegAverages[electrode], -1000, 1000, 0, 1);
     return val;
   })).innerJoin();
-}
-window.egg = eeg
+};
+window.eeg = eeg;
