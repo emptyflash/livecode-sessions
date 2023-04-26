@@ -92,9 +92,12 @@ window.riffusion = riffusion
 
 const { MuseClient } = await import('https://muse-js.netlify.app/muse.js')
 
-if (!window.museClient || !window.museClient.connectionStatus.getValue()) {
-  window.museClient = new MuseClient();
-  window.museClient.enablePpg = true;
+if (!window.museClient) {
+    window.museClient = new MuseClient();
+    window.museClient.enablePpg = true;
+}
+
+async function startMuse() {
   await window.museClient.connect();
   await window.museClient.start();
 }
