@@ -112,7 +112,7 @@ function scale (number, inMin, inMax, outMin, outMax) {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 
-const eeg = (electrodePattern) => {
+const eeg = (electrode) => {
   return signal((t) => {
     let val = scale(eegAverages[electrode], -1000, 1000, 0, 1);
     return val;
