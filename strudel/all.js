@@ -97,16 +97,15 @@ if (!window.museClient) {
     window.museClient.enablePpg = true;
 }
 
+let eegAverages = {}
+
 async function startMuse() {
   await window.museClient.connect();
   await window.museClient.start();
+  window.museClient.eegReadings.subscribe(reading => {
+    eegAverages[reading.electrode] = reading.samples.reduce((a,b) => a+b, 0) / reading.samples.length;
+  });
 }
-
-let eegAverages = {}
-window.museClient.eegReadings.subscribe(reading => {
-  eegAverages[reading.electrode] = reading.samples.reduce((a,b) => a+b, 0) / reading.samples.length;
-});
-
 
 function scale (number, inMin, inMax, outMin, outMax) {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
