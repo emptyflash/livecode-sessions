@@ -106,7 +106,7 @@ async function startMuse() {
     eegAverages[reading.electrode] = reading.samples.reduce((a,b) => a+b, 0) / reading.samples.length;
   });
 }
-window.startMuse;
+window.startMuse = startMuse;
 
 function scale (number, inMin, inMax, outMin, outMax) {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
