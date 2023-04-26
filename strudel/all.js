@@ -113,9 +113,9 @@ function scale (number, inMin, inMax, outMin, outMax) {
 }
 
 const eeg = (electrodePattern) => {
-  return reify(electrodePattern).fmap(signal((t) => {
+  return signal((t) => {
     let val = scale(eegAverages[electrode], -1000, 1000, 0, 1);
     return val;
-  })).innerJoin();
+  });
 };
 window.eeg = eeg;
