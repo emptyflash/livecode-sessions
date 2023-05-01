@@ -89,3 +89,33 @@ async function riffusion(sampleName, prompt, seed, steps, overrides) {
   }
 }
 window.riffusion = riffusion
+
+const { MuseClient } = await import('https://muse-js.netlify.app/muse.js')
+
+if (!window.museClient) {
+    window.museClient = new MuseClient();
+    window.museClient.enablePpg = true;
+}
+
+let eegAverages = {}
+
+async function startMuse() {
+  await window.museClient.connect();
+  await window.museClient.start();
+  window.museClient.eegReadings.subscribe(reading => {
+    eegAverages[reading.electrode] = reading.samples.reduce((a,b) => a+b, 0) / reading.samples.length;
+  });
+}
+window.startMuse = startMuse;
+
+function scale (number, inMin, inMax, outMin, outMax) {
+  return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
+
+const eeg = (electrode) => {
+  return signal((t) => {
+    let val = scale(eegAverages[electrode], -1000, 1000, 0, 1);
+    return val;
+  });
+};
+window.eeg = eeg;
