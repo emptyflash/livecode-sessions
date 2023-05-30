@@ -18,7 +18,7 @@ function onMIDIFailure() {
 //create an array to hold our cc values and init to a normalized value
 window.cc = Array(128).fill(0)
 
-getMIDIMessage = function(midiMessage) {
+function getMIDIMessage(midiMessage) {
     var arr = midiMessage.data    
     var index = arr[1]
     //console.log('Midi received on cc#' + index + ' value:' + arr[2])    // uncomment to monitor incoming Midi
