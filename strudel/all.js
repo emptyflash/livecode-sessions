@@ -77,7 +77,7 @@ async function riffusion(sampleName, prompt, seed, steps, overrides) {
     })
       .then(r => r.json())
       .then(json => {
-        sampleList[step] = json.output.audio
+        sampleList[step-1] = json.output.audio
         samples({
           [sampleName]: sampleList
         })
