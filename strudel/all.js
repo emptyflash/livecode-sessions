@@ -119,3 +119,8 @@ const eeg = (electrode) => {
   });
 };
 window.eeg = eeg;
+
+const midi = i => signal(() => {
+  return cc[i] - (1/128);
+});
+window.midi = midi;
