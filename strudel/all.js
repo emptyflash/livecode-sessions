@@ -124,3 +124,20 @@ const midi = i => signal(() => {
   return cc[i] - (1/128);
 });
 window.midi = midi;
+
+function dec2bin(decimal) {
+    let binary = [];
+    let divisor;
+    let remainder;
+    while (Math.floor(decimal/2) > 0) {
+        divisor = Math.floor(decimal/2);
+        remainder = decimal % 2;
+        binary.push(remainder);
+        decimal = divisor;
+    }
+    divisor = Math.floor(decimal/2);
+    remainder = decimal % 2;
+    binary.push(remainder);
+    return binary.reverse();
+}
+window.dec2bin
