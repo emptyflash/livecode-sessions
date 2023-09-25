@@ -8,7 +8,7 @@ if (!document.getElementById('hydra-canvas')) {
   const hydraCanvas = testCanvas.cloneNode(true)
   hydraCanvas.id = 'hydra-canvas'
   testCanvas.after(hydraCanvas)
-  new Hydra({ canvas:hydraCanvas, detectAudio: false })
+  new Hydra({ canvas:hydraCanvas })
   s0.init({src: testCanvas})
 }
 
