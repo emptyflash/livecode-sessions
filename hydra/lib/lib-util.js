@@ -101,3 +101,19 @@ setFunction({
          'st.y = mod(floor(st.y), 2.0) == 0.0 ? fract(st.y) : 1.0 - fract(st.y);'+
         'return st;'
 })
+
+async function loadPlaylist(playlistId, page) {
+  const playlistResp = await fetch(`https://cdn.jwplayer.com/v2/playlists/${playlistId}`).then(r => r.json())
+  let sourceFiles = playlistResp.playlist.map((m) => {
+    const sources = m.sources.filter((s) => s.width);
+    sources.sort((a,b) => b.width - a.width);
+    return sources[0].file;
+  })
+  let wrappedPage = page % sourceFiles.length;
+  sourceFiles.slice(wrappedPage, wrappedPage+4).forEach((s, i) => {
+    const source = window['s' + i];
+    if (source.src.src != s) {
+      source.initVideo(s);
+    }
+  });
+}
