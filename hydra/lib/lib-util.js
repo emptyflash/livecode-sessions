@@ -117,3 +117,5 @@ async function loadPlaylist(playlistId, page) {
     }
   });
 }
+
+window.loadPlaylist = loadPlaylist;
