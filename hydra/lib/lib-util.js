@@ -112,7 +112,7 @@ async function loadPlaylist(playlistId, page) {
   let wrappedPage = page % sourceFiles.length;
   sourceFiles.slice(wrappedPage, wrappedPage+4).forEach((s, i) => {
     const source = window['s' + i];
-    if (source.src.src != s) {
+    if (source?.src?.src != s) {
       source.initVideo(s);
     }
   });
