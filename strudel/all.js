@@ -2,16 +2,6 @@ await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
 await samples('github:tidalcycles/Dirt-Samples/master')
 await samples('github:emptyflash/Samples/main')
 
-if (!document.getElementById('hydra-canvas')) {
-  await import('https://unpkg.com/hydra-synth')
-  const testCanvas = document.getElementById('test-canvas')
-  const hydraCanvas = testCanvas.cloneNode(true)
-  hydraCanvas.id = 'hydra-canvas'
-  testCanvas.after(hydraCanvas)
-  new Hydra({ canvas:hydraCanvas })
-  s0.init({src: testCanvas})
-}
-
 await loadCsound`
 instr SubFade 
   asig = vco2(p5, p4)
@@ -119,11 +109,6 @@ const eeg = (electrode) => {
   });
 };
 window.eeg = eeg;
-
-const midi = i => signal(() => {
-  return cc[i] - (1/128);
-});
-window.midi = midi;
 
 function dec2bin(decimal) {
     let binary = [];
