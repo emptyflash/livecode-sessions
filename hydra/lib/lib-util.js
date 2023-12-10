@@ -119,3 +119,48 @@ async function loadPlaylist(playlistId, page) {
 }
 
 window.loadPlaylist = loadPlaylist;
+
+setFunction({
+	name: 'koch',
+	type: 'coord',
+	inputs: [{
+		name: 'inputAngle',
+		type: 'float',
+		default: 2 * Math.PI / 3
+	}, ],
+	glsl: `
+  	// https://www.shadertoy.com/view/tdcGDj
+  	vec2 uv = _st-.5;
+  	uv *= 1.25;
+    uv.x = abs(uv.x);
+
+    vec3 col = vec3(0);
+
+    float angle = (5./6.)*3.1415;
+    vec2 n = vec2(sin(angle), cos(angle));
+
+    uv.y += tan(angle)*.5;
+   	float d = dot(uv-vec2(.5, 0), n);
+    uv -= max(0.,d)*n*2.;
+
+    float scale = 1.;
+
+    angle = inputAngle;
+    n = vec2(sin(angle), cos(angle));
+    uv.x += .5;
+    for(int i=0; i<5; i++) {
+        uv *= 3.;
+        scale *= 3.;
+        uv.x -= 1.5;
+
+        uv.x = abs(uv.x);
+        uv.x -= .5;
+        d = dot(uv, n);
+        uv -= min(0.,d)*n*2.;
+	}
+
+    d = length(uv - vec2(clamp(uv.x,-1., 1.), 0));
+    uv /= scale;
+  	return uv;
+`
+});
