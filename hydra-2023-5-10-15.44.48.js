@@ -1,0 +1,8 @@
+await import("https://livecode.emptyfla.sh/hydra/all.js")
+src(o0)
+	.diff(osc(5, .1, 1), .2)
+	.rotate([.3, Math.PI/2, Math.PI+.1].ease('easeInOutCubic'),0)
+// 	.scrollY(.1,.1)
+	.mirroredRepeat(2, 2)
+	.modulateScale(shape(99, .4, .4), [-1, 1].fast(.5).smooth())
+	.out()

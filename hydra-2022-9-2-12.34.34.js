@@ -1,0 +1,11 @@
+await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
+s0.initCam()
+let frame = 0;
+src(o0)
+	.sort(0, () => frame++, [1, 1], [1, 0])
+	.layer(osc(10, 1, 2)
+        .modulate(warp(1))
+		.modulate(src(s0), 10)
+		.mask(src(s0)
+			.luma(0.7, 0.01)))
+	.out()
