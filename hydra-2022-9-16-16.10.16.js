@@ -1,7 +1,7 @@
 // Hi I'm emptyflash
 // I'm livecoding in hydra
 // Here's a script of some stuff I like to use
-await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
+await import("https://livecode.emptyfla.sh/hydra/all.js")
 
 a.show()
 let audioTime = 0

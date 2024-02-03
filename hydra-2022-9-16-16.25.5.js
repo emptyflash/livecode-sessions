@@ -1,7 +1,7 @@
 // Aurora Digitalis
 // by Cameron Alexander (emptyfla.sh)
 
-await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
+await import("https://livecode.emptyfla.sh/hydra/all.js")
 
 src(o0)
 	.blend(

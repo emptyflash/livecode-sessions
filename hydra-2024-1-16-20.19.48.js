@@ -1,4 +1,4 @@
-await loadScript("https://hyper-hydra.glitch.me/hydra-convolutions.js")
+await import("https://hyper-hydra.glitch.me/hydra-convolutions.js")
 await import("https://livecode.emptyfla.sh/hydra/all.js")
 
 blur(o0, 1)

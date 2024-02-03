@@ -1,4 +1,4 @@
-await loadScript("https://livecode.emptyfla.sh/hydra/all.js")
+await import("https://livecode.emptyfla.sh/hydra/all.js")
 
 let frame = 0;
 src(o0)

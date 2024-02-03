@@ -1,4 +1,4 @@
-await loadScript("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
+await import("https://cdn.statically.io/gl/emptyflash/extra-shaders-for-hydra/main/lib/all.js")
 
 s0.initCam()
 
