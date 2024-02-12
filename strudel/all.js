@@ -128,6 +128,9 @@ function dec2bin(decimal) {
 window.dec2bin
 
 async function initBytebeat() {
+  let bytebeat = createParam('bytebeat')
+  window.bytebeat = bytebeat;
+  register('bytebeat', bytebeat)
   return await dough`
     let f
     let trigger = (value) => {
@@ -143,5 +146,3 @@ async function initBytebeat() {
   `
 }
 window.initBytebeat = initBytebeat
-let bytebeat = createParam('bytebeat')
-register('bytebeat', bytebeat)
