@@ -126,3 +126,22 @@ function dec2bin(decimal) {
     return binary.reverse();
 }
 window.dec2bin
+
+async function initBytebeat() {
+  return await dough`
+    let f
+    let trigger = (value) => {
+      f = Function('t', 'return ' + value.bytebeat)
+    }
+    let dsp = (t) => {
+      t*=44000
+      if(f)
+        return ((f(t)&255)/127.5 - 1)/4
+      else
+       return 0
+    }
+  `
+}
+window.initBytebeat = initBytebeat
+let bytebeat = createParam('bytebeat')
+register('bytebeat', bytebeat)

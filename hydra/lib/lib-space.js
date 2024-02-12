@@ -61,6 +61,7 @@ setFunction({
   float rr = length(xy);
   return (rr < hr ? xy * (r - h) / sqrt(r * r - rr * rr) : xy) + vec2(cx+0.5, cy+0.5);
 `})
+// Hyperbole derived from https://bit.ly/3AlGbcq
 setFunction({
   name: 'hyperbole',
   type: 'coord',
@@ -122,5 +123,6 @@ setFunction({
   return st;
 `})
 
-const { sculptToHydraRenderer } = await import("https://cdn.jsdelivr.net/gh/emptyflash/shader-park-core/dist/shader-park-core.esm.js")
+const { sculptToHydraRenderer } = await import("https://unpkg.com/shader-park-core/dist/shader-park-core.esm.js")
+window.sculptToHydraRenderer = sculptToHydraRenderer;
 export { sculptToHydraRenderer }
