@@ -1,0 +1,13 @@
+await import("https://livecode.emptyfla.sh/hydra/all.js")
+
+osc(20, 0.05, 0)
+	.modulate(o0, () => 0.3 * Math.sin(time))
+	.diff(osc(10, .01, 3)
+		.rotate(.1, .1))
+	.colorama()
+	.blend(src(o0)
+		.scale(.99), [.4, .9].ease('easeInOutCubic'))
+	.modulateScale(warp(2, .2, 2), .01)
+	.scrollX(.1, .01)
+	.koch(4)
+	.out(o0)
