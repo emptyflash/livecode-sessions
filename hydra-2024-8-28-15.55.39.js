@@ -1,0 +1,16 @@
+await import('https://livecode.emptyfla.sh/hydra/all.js')
+
+osc(60, .1)
+	.modulateRotate(noise(1), 1)
+	.diff(src(o0)
+		.scale(.99))
+	.diff(src(o1))
+	.diff(src(o1).scale(.6))
+	.out(o0)
+
+src(o0)
+	.diff(noise(1000, 1)
+		.scale(.1)
+		.scrollX(.1, .1))
+	.blurmore()
+	.out(o1)
