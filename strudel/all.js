@@ -1,6 +1,6 @@
-await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
-await samples('github:tidalcycles/Dirt-Samples/master')
-await samples('github:emptyflash/Samples/main')
+//await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
+//await samples('github:tidalcycles/Dirt-Samples/master')
+//await samples('github:emptyflash/Samples/main')
 
 await loadCsound`
 instr SubFade 
@@ -80,12 +80,14 @@ async function riffusion(sampleName, prompt, seed, steps, overrides) {
 }
 window.riffusion = riffusion
 
+/*
 const { MuseClient } = await import('https://muse-js.netlify.app/muse.js')
 
 if (!window.museClient) {
     window.museClient = new MuseClient();
     window.museClient.enablePpg = true;
 }
+*/
 
 let eegAverages = {}
 
@@ -121,7 +123,7 @@ function dec2bin(decimal) {
         decimal = divisor;
     }
     divisor = Math.floor(decimal/2);
-    remainder = decimal % 2;
+    //remainder = decimal % 2;
     binary.push(remainder);
     return binary.reverse();
 }
